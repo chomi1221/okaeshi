@@ -69,23 +69,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <firebase-app auth-domain="okaeshi-60a1d.firebaseapp.com"
-    database-url="https://okaeshi-60a1d.firebaseio.com"
-    api-key="AIzaSyCpmdzchZpNWqw_WhGfwgCkYO2uE6rXBLI">
+    <firebase-app auth-domain="okaeshi-60a1d.firebaseapp.com" database-url="https://okaeshi-60a1d.firebaseio.com" api-key="AIzaSyCpmdzchZpNWqw_WhGfwgCkYO2uE6rXBLI">
     </firebase-app>
-    <firebase-auth provider="twitter">
+    <firebase-auth id="auth" user="{{user}}" provider="twitter" on-error="handleError">
     </firebase-auth>
 
-    <app-location
-        route="{{route}}"
-        url-space-regex="^[[rootPath]]">
+
+    <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
     </app-location>
 
-    <app-route
-        route="{{route}}"
-        pattern="[[rootPath]]:page"
-        data="{{routeData}}"
-        tail="{{subroute}}">
+    <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}">
     </app-route>
 
     <app-drawer-layout fullbleed narrow="{{narrow}}">
@@ -96,7 +89,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a name="view1" href="[[rootPath]]view1">評価する</a>
           <a name="view2" href="[[rootPath]]view2">ステータス</a>
           <a name="view3" href="[[rootPath]]view3">設定</a>
-          <a name="view3" on-click="signInWithTwitter">ログイン</a>          
         </iron-selector>
       </app-drawer>
 
@@ -110,11 +102,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
         </app-header>
 
-        <iron-pages
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="view404"
-            role="main">
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
           <my-view1 name="view1"></my-view1>
           <my-view2 name="view2"></my-view2>
           <my-view3 name="view3"></my-view3>
@@ -131,18 +119,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     class MyApp extends Polymer.Element {
       static get is() { return 'my-app'; }
-
-      signInWithTwitter() {
-        // Using a popup.
-        var provider = new firebase.auth.TwitterAuthProvider()
-        firebase.auth().signInWithPopup(provider).then(function(result) {
-          // For accessing the Twitter API.
-          var token = result.credential.accessToken
-          var secret = result.credential.secret
-          // The signed-in user info.
-          var user = result.user
-        })
-      }
 
       static get properties() {
         return {
@@ -180,16 +156,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // Load page import on demand. Show 404 page if fails
         const resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         Polymer.importHref(
-            resolvedPageUrl,
-            null,
-            this._showPage404.bind(this),
-            true);
+          resolvedPageUrl,
+          null,
+          this._showPage404.bind(this),
+          true);
       }
 
       _showPage404() {
         this.page = 'view404';
       }
-      
+
 
     }
 

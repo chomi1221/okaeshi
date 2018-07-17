@@ -9,6 +9,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="my-view3">
@@ -21,17 +24,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <firebase-query path="users" data="{{users}}">
+    </firebase-query>
+
     <div class="card">
-      <div class="circle">3</div>
-      <h1>View Three</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+      <paper-input id="user_name" label="ユーザーを登録"></paper-input>
+      <paper-button raised on-click="addUser">登録</paper-button>
+    </div>
+    <div class="card">
+      <ul>
+        <template is="dom-repeat" items="[[users]]">
+          <li>[[name]]
+          </li>
+        </template>
+      </ul>
     </div>
   </template>
 
   <script>
     class MyView3 extends Polymer.Element {
       static get is() { return 'my-view3'; }
+      static get properties() {
+        return {
+          users: Object,
+          user: Object,
+          name: Object
+        }
+      }
+
+      static get observers() {
+        return [
+          'getUserList(users.splices)', //arrayに変化が起きたら実行される
+        ];
+      }
+
+      addUser() {
+        const userName = this.$.user_name.value
+        console.log(userName)
+        window.firebase.database().ref(`users`).push(userName)
+      }
+
+      getUserList() {
+        var getUserName
+        for (var i in this.users) {
+          getUserName = this.users[i].$val
+          this.set("name", getUserName)
+          console.log(getUserName)
+        }
+      }
+
     }
 
     window.customElements.define(MyView3.is, MyView3);

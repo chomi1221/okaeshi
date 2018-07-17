@@ -26,8 +26,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div class="card">
-      <paper-input label="タスクを入力" id="task"></paper-input>
+      <paper-input label="ユーザーAのタスクを入力" id="task"></paper-input>
       <paper-button raised on-click="submit">登録</paper-button>
+      <ul>
+        <template is="dom-repeat" items="[[questions]]">
+          <li>
+            <p>タスク1</p>
+            <p>タスクの内容が入ります</p>
+          </li>
+        </template>
+      </ul>
+    </div>
+    <div class="card">
+      <paper-input label="ユーザーBのタスクを入力" id="task"></paper-input>
+      <paper-button raised on-click="submit">登録</paper-button>
+      <ul>
+        <template is="dom-repeat" items="[[questions]]">
+          <li>
+            <p>タスク1</p>
+            <p>タスクの内容が入ります</p>
+          </li>
+        </template>
+      </ul>
     </div>
   </template>
 
@@ -35,10 +55,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class MyView1 extends Polymer.Element {
 
       static get is() { return 'my-view1'; }
-      
-      submit(){
+
+      submit() {
         const task = this.$.task.value
-        window.firebase.database().ref(`tasks`).push(task)
+        // window.firebase.database().ref(`tasks`).push(task)
+        window.firebase.database().ref(`users/users.$key`).push(task)
       }
 
     }
