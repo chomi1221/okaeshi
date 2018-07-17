@@ -11,46 +11,57 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../shared-styles.html">
 
-<dom-module id="userlist-helper">
+
+<dom-module id="tasks-helper">
     <template>
-        <!-- <style include="shared-styles">
+        <style include="shared-styles">
             :host {
                 display: block;
 
                 padding: 10px;
             }
-        </style> -->
+        </style>
 
-        <firebase-query path="[[users]]" data="{{users.$key}}">
-        </firebase-query>
+        <!-- <firebase-query path="users" data="{{users}}">
+        </firebase-query> -->
 
-        <li>helper読み込み完了</li>
-        <paper-button raised>登録</paper-button>
+        <paper-input label="[[users.name]]のタスクを入力" id="task"></paper-input>
+        <paper-button raised on-click="submit">登録</paper-button>
+        <ul>
+            <li>[[users.$key]]</li>
+        </ul>
+
 
     </template>
 
     <script>
-        class UserlistHelper extends Polymer.Element {
-            static get is() { return 'userlist-helper'; }
+        class TasksHelper extends Polymer.Element {
+
+            static get is() { return 'tasks-helper'; }
+
             static get properties() {
                 return {
-                    user: Object
+                    users: Object,
+                    tasks: Object
                 }
             }
+
             // static get observers() {
             //     return [
-            //         // 'calculateTotal(stats.splices)', //arrayに変化が起きたら実行される
+            //         'submit(tasks.splices)', //arrayに変化が起きたら実行される
             //     ];
             // }
 
-            // getUserlist() {
+            submit() {
+                const newTask = this.$.task.value
+                window.firebase.database().ref(`users/${this.users.$key}/tasks`).push(newTask)
+            }
 
-            // }
         }
 
-        window.customElements.define(UserlistHelper.is, UserlistHelper);
+        window.customElements.define(TasksHelper.is, TasksHelper);
     </script>
 </dom-module>

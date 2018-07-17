@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="helper/tasks-helper.html">
 <link rel="import" href="shared-styles.html">
 
 
@@ -25,41 +26,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <div class="card">
-      <paper-input label="ユーザーAのタスクを入力" id="task"></paper-input>
-      <paper-button raised on-click="submit">登録</paper-button>
-      <ul>
-        <template is="dom-repeat" items="[[questions]]">
-          <li>
-            <p>タスク1</p>
-            <p>タスクの内容が入ります</p>
-          </li>
-        </template>
-      </ul>
-    </div>
-    <div class="card">
-      <paper-input label="ユーザーBのタスクを入力" id="task"></paper-input>
-      <paper-button raised on-click="submit">登録</paper-button>
-      <ul>
-        <template is="dom-repeat" items="[[questions]]">
-          <li>
-            <p>タスク1</p>
-            <p>タスクの内容が入ります</p>
-          </li>
-        </template>
-      </ul>
-    </div>
+    <firebase-query path="users" data="{{users}}">
+    </firebase-query>
+
+    <template is="dom-repeat" items="[[users]]">
+      <div class="card">
+        <tasks-helper users="[[item]]"></tasks-helper>
+      </div>
+
+    </template>
+
   </template>
 
   <script>
     class MyView1 extends Polymer.Element {
 
       static get is() { return 'my-view1'; }
-
-      submit() {
-        const task = this.$.task.value
-        // window.firebase.database().ref(`tasks`).push(task)
-        window.firebase.database().ref(`users/users.$key`).push(task)
+      static get properties() {
+        return {
+          users: Object
+        }
       }
 
     }
