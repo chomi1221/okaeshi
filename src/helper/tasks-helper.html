@@ -25,13 +25,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         </style>
 
-        <!-- <firebase-query path="users" data="{{users}}">
-        </firebase-query> -->
+        <firebase-query path="users/[[users.$key]]/tasks" data="{{tasks}}">
+        </firebase-query>
 
         <paper-input label="[[users.name]]のタスクを入力" id="task"></paper-input>
         <paper-button raised on-click="submit">登録</paper-button>
         <ul>
-            <li>[[users.$key]]</li>
+            <template is="dom-repeat" items="[[tasks]]">
+                <li>[[item.$val]]</li>
+            </template>
         </ul>
 
 
@@ -45,19 +47,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             static get properties() {
                 return {
                     users: Object,
-                    tasks: Object
+                    tasks: {
+                        type: Object,
+                        value: []
+                    }
                 }
             }
 
-            // static get observers() {
-            //     return [
-            //         'submit(tasks.splices)', //arrayに変化が起きたら実行される
-            //     ];
-            // }
+            static get observers() {
+                return [
+                    'taskWatcher(users.splices)', //arrayに変化が起きたら実行される
+                ];
+            }
 
             submit() {
                 const newTask = this.$.task.value
                 window.firebase.database().ref(`users/${this.users.$key}/tasks`).push(newTask)
+            }
+
+            taskWatcher() {
+                // const taskList = this.$.users.length
+                console.log("taskList")
             }
 
         }
