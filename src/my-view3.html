@@ -19,8 +19,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+
+      .input-wrap paper-input {
+        width: 100%;
+      }
+
+      .input-wrap paper-button {
+        margin: 0;
+        height: 40px;
+        position: absolute;
+        bottom: 16px;
+        right: 0;
+      }
+
+      paper-button.custom {
+        display: block;
+        margin: 6px 0;
+        --paper-button-ink-color: var(--paper-blue-900);
+        /* These could also be individually defined for each of the
+      specific css classes, but we'll just do it once as an example */
+        --paper-button-flat-keyboard-focus: {
+          background-color: var(--paper-blue-900);
+          color: white !important;
+        }
+        ;
+        --paper-button-raised-keyboard-focus: {
+          background-color: var(--paper-blue-900) !important;
+          color: white !important;
+        }
+        ;
+      }
+
+      paper-button.custom:hover {
+        background-color: var(--paper-blue-400);
+      }
+
+      paper-button.blue {
+        background-color: var(--paper-blue-500);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+          background-color: var(--paper-blue-900) !important;
+          color: white !important;
+        }
+        ;
       }
     </style>
 
@@ -28,8 +75,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-query>
 
     <div class="card">
-      <paper-input id="user_name" label="ユーザーを登録"></paper-input>
-      <paper-button raised on-click="addUser">登録</paper-button>
+      <div class="input-wrap">
+        <paper-input id="user_name" label="ユーザーを登録"></paper-input>
+        <paper-button raised on-click="addUser" class="custom blue">登録</paper-button>
+      </div>
     </div>
     <div class="card">
       <h1>ユーザーリスト</h1>
@@ -69,7 +118,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         const tasks = []
         const userBox = {
           name: name,
-          tasks: ""
+          // tasks: ""
         }
         window.firebase.database().ref(`users`).push(userBox)
       }

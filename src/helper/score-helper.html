@@ -12,11 +12,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
-<link rel="import" href="./score-helper.html">
 <link rel="import" href="../shared-styles.html">
 
 
-<dom-module id="tasks-helper">
+<dom-module id="score-helper">
     <template>
         <style include="shared-styles">
             :host {
@@ -24,35 +23,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 padding: 10px;
             }
 
-            .input-wrap {
+            paper-button {
                 position: relative;
             }
 
-            .input-wrap paper-input {
-                width: 100%;
-            }
-
-            .input-wrap paper-button {
-                margin: 0;
-                height: 40px;
+            paper-button span {
                 position: absolute;
-                bottom: 16px;
-                right: 0;
+                right: 0.57em;
             }
-
-            .tasks {
-                margin: 0;
-                padding: 0;
-            }
-
-            .tasks li {
-                list-style: none;
-            }
-
-            score-helper {
-                padding: 0;
-            }
-
 
             paper-button.custom {
                 display: block;
@@ -87,54 +65,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         </style>
 
-        <firebase-query path="users/[[users.$key]]/tasks" data="{{tasks}}">
-        </firebase-query>
-        <div class="input-wrap">
-            <paper-input label="[[users.name]]のタスクを入力" id="task"></paper-input>
-            <paper-button class="blue" on-click="submit">登録</paper-button>
-        </div>
+        <!-- <firebase-query path="users/[[users.$key]]/tasks" data="{{tasks}}">
+        </firebase-query> -->
 
-        <ul class="tasks">
-            <template is="dom-repeat" items="[[tasks]]">
-                <li>
-                    <score-helper users=[[users]] tasks=[[item]]></score-helper>
-                </li>
-            </template>
-        </ul>
+        <paper-button class="custom blue" on-click="addPoint">[[tasks.name]]
+            <span id="score">[[tasks.score]]点</span>
+        </paper-button>
 
 
     </template>
 
     <script>
-        class TasksHelper extends Polymer.Element {
+        class ScoreHelper extends Polymer.Element {
 
-            static get is() { return 'tasks-helper'; }
+            static get is() { return 'score-helper'; }
 
             static get properties() {
                 return {
-                    users: Object,
-                    tasks: {
-                        type: Object,
-                        // value: []
-                    }
+                    users: {
+                        type: Object
+                    },
+                    // tasks: {
+                    //     type: Object,
+                    //     // value: []
+                    // }
                 }
             }
 
-            submit() {
-                // const newTask = this.$.task.value
-                const newTask = {
-                    name: this.$.task.value,
-                    score: 0
-                }
-                window.firebase.database().ref(`users/${this.users.$key}/tasks`).push(newTask)
+            addPoint() {
+                var score = this.tasks.score
+                score = score + 50
+                console.log(score)
+                window.firebase.database().ref(`users/${this.users.$key}/tasks/${this.tasks.$key}/score`).set(score)
             }
-
-
-
-
-
         }
 
-        window.customElements.define(TasksHelper.is, TasksHelper);
+        window.customElements.define(ScoreHelper.is, ScoreHelper);
     </script>
 </dom-module>
