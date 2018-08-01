@@ -16,16 +16,20 @@
     "manifest.json"
   ],
   "lint": {
-    "rules": ["polymer-2"]
+    "rules": [
+      "polymer-2"
+    ]
   },
   "builds": [
     {
       "name": "default",
-      "addServiceWorker": true,
-      "css": {"minify": true},
-      "html": {"minify": true}
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "addServiceWorker": true
     }
   ]
 }
-
-

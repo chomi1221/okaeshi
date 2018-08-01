@@ -15,6 +15,7 @@ module.exports = {
     'bower_components/webcomponentsjs/webcomponents-loader.js',
     'manifest.json',
   ],
+  navigateFallbackWhitelist: [/^(?!\/__)/],
   runtimeCaching: [
     {
       urlPattern: /\/bower_components\/webcomponentsjs\/.*.js/,

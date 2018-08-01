@@ -71,9 +71,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <firebase-auth id="auth" user="{{user}}" provider="twitter" on-error="handleError">
+    </firebase-auth>
+
     <firebase-query path="users" data="{{users}}">
     </firebase-query>
 
+    <div class="card">
+      <paper-button raised on-click="twitterLogin" class="custom blue" hidden$="[[user]]">Twitterでログインする</paper-button>
+      <paper-button raised on-click="twitterLogOut" class="custom blue" hidden$="[[!user]]">ログアウト</paper-button>
+
+    </div>
     <div class="card">
       <div class="input-wrap">
         <paper-input id="user_name" label="ユーザーを登録"></paper-input>
@@ -99,7 +107,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return {
           users: Object,
           user: Object,
-          name: Object
+          name: Object,
+
           // names: {
           //   type: Object,
           //   value: []
@@ -123,6 +132,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.firebase.database().ref(`users`).push(userBox)
       }
 
+      twitterLogin(provider) {
+        this.$.auth.signInWithPopup().then(function (response) {
+          console.log("success!")
+        }).catch(function (error) {
+          console.log("failed")
+        })
+      }
+
+      twitterLogOut() {
+        this.$.auth.signOut().then(() => {
+          console.log("logout")
+        })
+
+      }
       // getUserList() {
       //   var getUserName
       //   for (var i in this.users) {
